@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Digital Mess Book</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100dvh;
+      margin: 0;
+      padding: 16px;
+      box-sizing: border-box;
+      overflow-x: hidden;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .container{
+      width:100%;
+      max-width:500px;
+      margin:auto;
+      text-align:center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    input{
+      width:100%;
+      padding:14px 16px;
+      margin-top:14px;
+      border:1px solid #D1D5DB;
+      border-radius:12px;
+      background:#F9FAFB;
+      font-size:16px;
+      outline:none;
+      transition:.2s;
+    }
+
+    input:focus{
+      border-color:#4CAF50;
+      background:#fff;
+      box-shadow:0 0 0 3px rgba(76,175,80,.15);
+    }
+
+    button{
+      width:100%;
+      padding:14px;
+      margin-top:10px;
+      border:none;
+      border-radius:12px;
+      cursor:pointer;
+      font-size:16px;
+      font-weight:600;
+      transition:all .2s ease;
+    }
+
+    button:disabled {
+      background-color: #9E9E9E;
+      cursor: not-allowed;
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-top: 10px;
+      min-height: 18px;
+    }
+
+    #foodBtn{
+      width:auto;
+      padding:10px 18px;
+      font-size:14px;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 20px;
+      margin-left: 10px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.3s;
+      border-radius: 20px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #4CAF50;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+  .option-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 220px;
+    margin: 8px auto;
+  }
+
+  .option-label {
+    font-size: 14px;
+  }
+
+  #calendarGrid{
+    display:grid;
+    grid-template-columns:repeat(7,minmax(0,1fr));
+    gap:6px;
+    margin-top:15px;
+    width:100%;
+  }
+
+  h2{
+      font-size:clamp(24px,5vw,30px);
+  }
+
+  h3{
+      font-size:clamp(18px,4vw,22px);
+  }
+
+  h4{
+      font-size:clamp(15px,3vw,17px);
+  }
+
+  /* ---------- Utility Classes ---------- */
+
+    .mt-5   { margin-top:5px; }
+    .mt-10  { margin-top:10px; }
+    .mt-15  { margin-top:15px; }
+    .mt-20  { margin-top:20px; }
+
+    .text-center{
+        text-align:center;
+    }
+
+    .text-small{
+        font-size:13px;
+    }
+
+    .text-normal{
+        font-size:14px;
+    }
+
+    .text-muted{
+        color:#555;
+    }
+
+    .text-secondary{
+        color:#777;
+    }
+
+    .flex-row{
+        display:flex;
+        gap:10px;
+    }
+
+    .flex-1{
+        flex:1;
+    }
+
+
+  /* ======================================================
+    COMPONENT LIBRARY (MH App Design System v1)
+  ====================================================== */
+
+    /* ---------- Page ---------- */
+
+    .page{
+        width:100%;
+        max-width:420px;
+        margin:auto;
+    }
+
+    /* ---------- Cards ---------- */
+
+    .card{
+        background:#fff;
+        border-radius:20px;
+        padding:28px;
+        width:100%;
+        box-shadow:0 12px 30px rgba(0,0,0,.10);
+    }
+
+    /* ---------- Titles ---------- */
+
+    .page-title{
+      font-size:28px;
+      font-weight:700;
+      color:#1F2937;
+      margin:0;
+    }
+
+    .section-title{
+        font-size:20px;
+        font-weight:600;
+        color:#1F2937;
+        margin-bottom:12px;
+    }
+
+    .subtitle{
+        font-size:18px;
+        color:#6B7280;
+    }
+
+    /* ---------- Footer ---------- */
+
+    .footer{
+        margin-top:20px;
+        font-size:14px;
+        color:#6B7280;
+        line-height:1.6;
+    }
+
+    /* ---------- Button Variants ---------- */
+
+    .btn-primary{
+      background:#4CAF50;
+      color:#fff;
+      letter-spacing:.5px;
+      text-transform:uppercase;
+    }
+
+    .btn-primary:hover{
+        background:#43A047;
+    }
+
+    .btn-secondary{
+        background:#fff;
+        color:#4CAF50;
+        border:2px solid #4CAF50;
+    }
+
+    .btn-secondary:hover{
+        background:#4CAF50;
+        color:#fff;
+    }
+
+    .btn-action{
+        background:#1E3A8A;
+        color:#fff;
+    }
+
+    .btn-action:hover{
+        background:#183075;
+    }
+
+    .btn-danger{
+        background:#8B0000;
+        color:#fff;
+    }
+
+    .btn-danger:hover{
+        background:#6F0000;
+    }
+
+    .login-divider{
+        border:none;
+        border-top:1px solid #E5E7EB;
+        margin:22px 0;
+    }
+
+  @media (max-width:480px){
+
+      body{
+          padding:10px;
+      }
+
+      .container{
+          padding:8px;
+          max-width:100%;
+      }
+
+      #dashboard{
+          padding:10px;
+      }
+
+      #calendarGrid{
+          gap:4px;
+      }
+
+      .option-row{
+          width:100%;
+      }
+
+  }
+
+
+  </style>
+</head>
+
+
+<body>
+
+
+<!-- 🔵 Login Screen 🔵 -->
+
+<div class="container">
+
+  <div class="card">
+
+    <div style="font-size:54px; margin-bottom:12px;">
+      🍽️
+    </div>
+
+    <h2 class="page-title">
+      T-Digi Mess Book
+    </h2>
+    <hr class="login-divider">
+
+    <h4
+      class="subtitle"
+      style="margin:10px 0 22px;">
+      MH NSSCE
+    </h4>
+
+    <input type="text" id="accNo" placeholder="Account Number">
+
+    <input type="password" id="password" placeholder="Password">
+
+    <div
+      class="text-small text-secondary"
+      style="margin:16px 0 8px;">
+      Default password:<br>
+      College admission number (e.g. <strong>24B000</strong>)
+    </div>
+
+    <button
+      id="loginBtn"
+      class="btn-primary"
+      onclick="login()">
+      Login
+    </button>
+
+    <div
+      class="footer"
+      style="border-top:1px solid #EEE; padding-top:18px;">
+      Powered by
+      <br><strong>IntLine Solutions</strong><br>
+      intlinesolutions@gmail.com
+    </div>
+
+    <div id="errorMsg" class="error"></div>
+
+  </div>
+
+</div>
+
+
+<!-- 🔵 Home / Dashboard 🔵 -->
+
+  <div id="dashboard"
+    class="page text-center"
+    style="
+    display:none;
+    padding:16px;
+  ">
+
+  <h4 class="text-secondary" style="margin-top:-10px;">Welcome</h4>
+
+  <h2>Test : Digi Mess Book Lite</h2>
+
+  <p id="studentName"></p>
+
+  <h3>Mess Book - July 2026</h3>
+
+  <p id="totalDaysText"></p>
+
+  <!-- 🔵 Calendar Section -->
+  <div id="calendar">
+    <div id="calendarGrid"></div>
+  </div>
+
+  <div style="margin-top:15px;">
+    <button
+      id="foodBtn"
+      class="btn-secondary"
+      onclick="openFoodPopup()">
+      Food Preference
+    </button>
+    <p id="foodSummary" style="font-size:13px; margin-top:8px; color:#444;"></p>
+
+    <!-- 🔵 Footer Section -->
+    <div class="mt-15" style="font-size:15px;color:#7393B3;">
+      <br>This is a limited free trial version<br>
+    </div>
+
+    <div class="mt-15 text-normal text-muted">
+      © IntLine Solutions , 2026<br>
+      intlinesolutions@gmail.com
+    </div>
+
+  </div>
+</div>
+
+
+<!-- 🔵 Day Popup 🔵 -->
+
+<div id="popup" style="
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.5);
+  justify-content:center;
+  align-items:center;
+">
+
+  <div class="card"
+    style="
+    width:90%;
+    max-width:360px;
+    text-align:center;
+  ">
+    <!-- 🔵 Day Popup Heading 🔵 -->
+    <h3 id="popupDate"></h3>
+    <p id="lockMsg" style="font-size:13px; margin-bottom:10px;"></p>
+
+    <div>
+
+      <!-- 🔵 Day Popup - Options 🔵 -->
+      <label class="option-row" style="cursor:pointer;">
+        <div class="option-label">Breakfast ☕</div>
+        <span class="switch">
+          <input type="checkbox" id="b">
+          <span class="slider"></span>
+        </span>
+      </label>
+
+      <label class="option-row" style="cursor:pointer;">
+        <div class="option-label">Lunch 🍛</div>
+        <span class="switch">
+          <input type="checkbox" id="l">
+          <span class="slider"></span>
+        </span>
+      </label>
+
+      <label class="option-row" style="cursor:pointer;">
+        <div class="option-label">Tea 🍵</div>
+        <span class="switch">
+          <input type="checkbox" id="t">
+          <span class="slider"></span>
+        </span>
+      </label>
+
+      <label class="option-row" style="cursor:pointer;">
+        <div class="option-label">Dinner 🍽️</div>
+        <span class="switch">
+          <input type="checkbox" id="d">
+          <span class="slider"></span>
+        </span>
+      </label>
+
+    </div>
+
+    <br>
+
+    <!-- 🔵 Day Popup - Quick Action Buttons 🔵 -->
+    <div style="display:flex; justify-content:space-between; gap:10px; margin-bottom:10px;">
+      <button
+        id="fullDayBtn"
+        class="btn-action"
+        onclick="setFullDay()"
+        style="flex:1;">
+        Full Day
+      </button>
+
+      <button
+        id="messCutBtn"
+        class="btn-danger"
+        onclick="setMessCut()"
+        style="flex:1;">
+        Mess Cut
+      </button>
+    </div>
+
+    <!-- 🔵 Day Popup - Submit / Cancel Buttons 🔵 -->
+    <button
+      id="submitBtn"
+      class="btn-primary"
+      onclick="submitDay()">
+      Submit
+    </button>
+    
+    <button
+      class="btn-secondary"
+      onclick="closePopup()">
+      Cancel
+    </button>
+
+    <!-- ✅ Status Message -->
+    <div id="dayStatusMsg" style="
+      margin-top:12px;
+      font-size:13px;
+      min-height:16px;
+    "></div>
+  </div>
+</div>
+
+
+<!-- 🔵 Food Options Popup 🔵 -->
+
+<div id="foodPopup" style="
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.5);
+  justify-content:center;
+  align-items:center;
+">
+
+    <div class="card"
+      style="
+      width:90%;
+      max-width:360px;
+      text-align:center;
+    ">
+    <h3>Food Preference</h3>
+
+    <div>
+
+      <label class="option-row" style="cursor:pointer;">
+        <div class="option-label">Chicken 🍗</div>
+        <span class="switch">
+          <input type="checkbox" id="ch">
+          <span class="slider"></span>
+        </span>
+      </label>
+
+      <label class="option-row" style="cursor:pointer;">
+        <div class="option-label">Fish 🐟</div>
+        <span class="switch">
+          <input type="checkbox" id="fi">
+          <span class="slider"></span>
+        </span>
+      </label>
+
+      <label class="option-row" style="cursor:pointer;">
+        <div class="option-label">Egg 🥚</div>
+        <span class="switch">
+          <input type="checkbox" id="eg">
+          <span class="slider"></span>
+        </span>
+      </label>
+
+      <label class="option-row" style="cursor:pointer;">
+        <div class="option-label">Beef 🍖</div>
+        <span class="switch">
+          <input type="checkbox" id="bf">
+          <span class="slider"></span>
+        </span>
+      </label>
+
+      <label class="option-row" style="cursor:pointer;">
+        <div class="option-label">Veg only 🥦</div>
+        <span class="switch">
+          <input type="checkbox" id="veg">
+          <span class="slider"></span>
+        </span>
+      </label>
+
+    </div>
+
+    <br>
+    <p id="foodError" style="color:red; font-size:12px; min-height:5px;"></p>
+    <button onclick="submitFood()">Save</button>
+    <button onclick="closeFoodPopup()">Cancel</button>
+  </div>
+</div>
+
+
+
+<script>
+
+// 🔵 Login Screen 🔵 
+
+function login() {
+  const accNo = document.getElementById("accNo").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const btn = document.getElementById("loginBtn");
+  const error = document.getElementById("errorMsg");
+
+  // Clear previous error
+  error.innerText = "";
+
+  // Validation
+  if (!accNo || !password) {
+    error.innerText = "Please enter all fields";
+    return;
+  }
+
+  // 🔄 Loading state
+  btn.disabled = true;
+  btn.innerText = "Checking...";
+
+  // 🚀 Call Apps Script backend
+  google.script.run
+    .withSuccessHandler(function(response) {
+
+      if (response.status === "invalid_id") {
+        error.innerText = "Account not found";
+
+      } else if (response.status === "wrong_password") {
+        error.innerText = "Incorrect password";
+
+      } else if (response.status === "success") {
+        google.script.run.updateLastLogin(accNo);
+        error.style.color = "green";
+        error.innerText = "Login successful";
+
+        // 👉 Next step: load dashboard
+        // Hide login
+        document.querySelector(".container").style.display = "none";
+
+        // Show dashboard
+        document.getElementById("dashboard").style.display = "block";
+
+        // Set name
+        document.getElementById("studentName").innerText = response.name;
+        google.script.run
+          .withSuccessHandler(function(data) {
+
+            // Store globally
+            window.studentData = data;
+            updateFoodSummary(data.foodPreference);
+
+            // Food Popup Auto open if empty
+            setTimeout(() => {
+              if (!data.foodPreference || data.foodPreference.trim() === "") {
+                openFoodPopup();
+              }
+            }, 300);
+
+
+            if (!data) {
+              alert("Student data not found");
+              return;
+            }
+
+            // Show details (temporary)
+            document.getElementById("studentName").innerHTML =
+              "<div style='line-height:1.8;'>" +
+                "Name : " + data.name + "<br>" +
+                "Acc No : " + data.id + "<br>" +
+                "Hostel : " + data.hostel + "<br>" +
+                "Room : " + data.room +
+              "</div>";
+
+
+              // Calculate from BLTD data
+              let totalDays = 0;
+
+              Object.values(data.days).forEach(val => {
+                if (val !== "----") totalDays++;
+              });
+
+              // Store globally
+              window.studentData.totalDays = totalDays;
+
+              // Show in UI
+              document.getElementById("totalDaysText").innerText =
+                "Total Days: " + totalDays;
+
+            console.log(data); // very useful for next step
+
+            const calendar = document.getElementById("calendarGrid");
+            calendar.innerHTML = "";
+
+            // Week headers
+            const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+            weekDays.forEach(day => {
+              const el = document.createElement("div");
+              el.innerText = day;
+              el.style.fontWeight = "bold";
+              calendar.appendChild(el);
+            });
+
+            // 👉 Convert keys to proper Date objects
+            const dateEntries = Object.keys(data.days).map(key => {
+              return {
+                raw: key,
+                dateObj: new Date(key)
+              };
+            });
+
+            // 👉 Sort dates properly
+            dateEntries.sort((a, b) => a.dateObj - b.dateObj);
+
+            // 👉 Get first date
+            const firstDate = dateEntries[0].dateObj;
+            const startDay = firstDate.getDay();
+
+            // 👉 Add empty cells before start
+            for (let i = 0; i < startDay; i++) {
+              const empty = document.createElement("div");
+              calendar.appendChild(empty);
+            }
+
+            // 👉 Loop through sorted dates
+            dateEntries.forEach(entry => {
+
+              const dateObj = entry.dateObj;
+              const value = window.studentData.days[entry.raw];
+
+              const cell = document.createElement("div");
+
+              // ✅ LOCK LOGIC - Create deadline (previous day 7 PM)
+              const deadline = new Date(dateObj);
+              deadline.setDate(deadline.getDate() - 1);
+              deadline.setHours(19, 0, 0, 0);
+
+              // Current time
+              const now = new Date();
+
+              // Check if locked
+              const isLocked = now > deadline;
+
+              // Apply grey background if locked
+              if (isLocked) {
+                cell.style.backgroundColor = "#e0e0e0";
+                cell.style.cursor = "not-allowed";
+              }
+
+
+              // Get today's date
+              const today = new Date();
+
+              // Compare with current cell date
+              if (
+                dateObj.getDate() === today.getDate() &&
+                dateObj.getMonth() === today.getMonth() &&
+                dateObj.getFullYear() === today.getFullYear()
+              ) {
+                cell.style.border = "2px solid blue";
+              }
+
+              cell.style.border = "1px solid #ccc";
+              cell.style.borderRadius = "8px";
+              cell.style.padding = "8px 4px";
+              cell.style.textAlign = "center";
+              cell.style.cursor = "pointer";
+              cell.style.position = "relative";
+              cell.style.minHeight = "58px";
+
+              // ✅ Correct date number
+              const dateNum = dateObj.getDate();
+
+              // Dot color
+              let dotColor = (value === "----") ? "red" : "green";
+
+              cell.innerHTML = `
+                <div style="font-size:14px;font-weight:600;">${dateNum}</div>
+                <div style="
+                  width:8px;
+                  height:8px;
+                  border-radius:50%;
+                  background:${dotColor};
+                  margin:5px auto 0;
+                "></div>
+              `;
+
+              // Click event
+                  cell.onclick = () => {
+
+                    window.selectedDate = dateObj;
+                    window.selectedKey = entry.raw;
+                    window.selectedCell = cell;   // ⭐ IMPORTANT
+                    window.isLocked = isLocked;
+
+                    document.getElementById("popup").style.display = "flex";
+
+                    document.getElementById("popupDate").innerText =
+                      dateObj.toDateString();
+
+                    const msg = document.getElementById("lockMsg");
+
+                    // Create deadline time limit message
+                    const deadline = new Date(dateObj);
+                    deadline.setDate(deadline.getDate() - 1);
+                    deadline.setHours(19, 0, 0, 0);
+
+                    // Format deadline nicely
+                    const options = {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true   // ⭐ IMPORTANT
+                  };
+
+                  const deadlineText = deadline.toLocaleString('en-GB', options);
+
+                  // convert AM/PM → lowercase
+                  const formattedDeadline = deadlineText
+                    .replace('AM', 'am')
+                    .replace('PM', 'pm')
+                    .replace(',', ' •');
+
+
+                    // Show message
+                    if (isLocked) {
+                      msg.innerText = "Locked (Deadline: " + deadlineText + ")";
+                      msg.style.color = "red";
+                    } else {
+                      msg.innerText = "Editable until: " + formattedDeadline;
+                      msg.style.color = "green";
+                    }
+
+                    // Always get latest value
+                    const latestValue = window.studentData.days[entry.raw];
+
+                    document.getElementById("b").checked = latestValue[0] === "B";
+                    document.getElementById("l").checked = latestValue[1] === "L";
+                    document.getElementById("t").checked = latestValue[2] === "T";
+                    document.getElementById("d").checked = latestValue[3] === "D";
+
+                    const disabled = isLocked;
+                    ["b","l","t","d","submitBtn","fullDayBtn","messCutBtn"].forEach(id => {
+                      const el = document.getElementById(id);
+                      if (el) {
+                        el.disabled = disabled;
+
+                        // ✅ Visual state ONLY for popup open logic
+                        if (disabled) {
+                          el.style.opacity = "0.6";
+                          el.style.cursor = "not-allowed";
+                        } else {
+                          el.style.opacity = "1";
+                          el.style.cursor = "pointer";
+                        }
+                      }
+                    });
+
+                    // ✅ Reset status message every time popup opens
+                    const statusMsg = document.getElementById("dayStatusMsg");
+                    if (statusMsg) {
+                      statusMsg.innerText = "";
+                    }
+
+                  };
+
+              calendar.appendChild(cell);
+            });
+
+             
+
+          })
+          .getStudentData(accNo);
+      }
+
+      // Reset button
+      btn.disabled = false;
+      btn.innerText = "Login";
+    })
+
+    .withFailureHandler(function(err) {
+      error.innerText = "Server error. Try again.";
+      btn.disabled = false;
+      btn.innerText = "Login";
+      console.error(err);
+    })
+
+    .checkLogin(accNo, password);
+}
+
+function closePopup() {
+  document.getElementById("popup").style.display = "none";
+}
+
+function submitDay() {
+
+  if (window.isLocked) {
+    alert("This day is locked");
+    return;
+  }
+
+  // Build code (BLTD format)
+  let code =
+    (document.getElementById("b").checked ? "B" : "-") +
+    (document.getElementById("l").checked ? "L" : "-") +
+    (document.getElementById("t").checked ? "T" : "-") +
+    (document.getElementById("d").checked ? "D" : "-");
+
+  const accNo = document.getElementById("accNo").value;
+
+  // Call backend
+  const statusMsg = document.getElementById("dayStatusMsg");
+
+// 🔄 Disable UI
+["b","l","t","d","submitBtn","fullDayBtn","messCutBtn"].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.disabled = true;
+});
+
+statusMsg.innerText = "";
+statusMsg.style.color = "#555";
+statusMsg.innerText = "Updating...";
+
+google.script.run
+  .withSuccessHandler(function() {
+
+    try {
+
+      let newValue = code;
+
+      // Update local data
+      window.studentData.days[window.selectedKey] = newValue;
+
+      // 🔢 Recalculate total days
+      let totalDays = 0;
+      Object.values(window.studentData.days).forEach(val => {
+        if (val !== "----") totalDays++;
+      });
+
+      window.studentData.totalDays = totalDays;
+
+      document.getElementById("totalDaysText").innerText =
+        "Total Days: " + totalDays;
+
+      // Update dot
+      let dotColor = (newValue === "----") ? "red" : "green";
+      const dot = window.selectedCell.children[1];
+      dot.style.background = dotColor;
+
+      // ✅ Success message
+      statusMsg.style.color = "green";
+      statusMsg.innerText = "Successfully Updated";
+
+      // ⏳ Close after 1 sec
+      setTimeout(() => {
+
+        // 🔓 Re-enable UI before closing (important for next open)
+        ["b","l","t","d","submitBtn","fullDayBtn","messCutBtn"].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.disabled = false;
+        });
+
+        closePopup();
+
+      }, 1000);
+
+    } catch (e) {
+
+      // ❌ Error case
+      statusMsg.style.color = "red";
+      statusMsg.innerText = "Error... Pls try submitting again";
+
+      // 🔓 Re-enable UI
+      ["b","l","t","d","submitBtn","fullDayBtn","messCutBtn"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.disabled = false;
+      });
+    }
+
+  })
+  .withFailureHandler(function() {
+
+    // ❌ Backend error
+    statusMsg.style.color = "red";
+    statusMsg.innerText = "Error... Pls try submitting again";
+
+    // 🔓 Re-enable UI
+    ["b","l","t","d","submitBtn","fullDayBtn","messCutBtn"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.disabled = false;
+    });
+
+  })
+  .updateDay(accNo, window.selectedKey, code);
+
+}
+
+function setFullDay() {
+
+  if (window.isLocked) {
+    alert("This day is locked");
+    return;
+  }
+
+  document.getElementById("b").checked = true;
+  document.getElementById("l").checked = true;
+  document.getElementById("t").checked = true;
+  document.getElementById("d").checked = true;
+
+  submitDay();
+}
+
+function setMessCut() {
+
+  if (window.isLocked) {
+    alert("This day is locked");
+    return;
+  }
+
+  document.getElementById("b").checked = false;
+  document.getElementById("l").checked = false;
+  document.getElementById("t").checked = false;
+  document.getElementById("d").checked = false;
+
+  submitDay();
+}
+
+
+window.onload = function () {
+  initFoodToggleLogic();
+};
+
+function openFoodPopup() {
+  document.getElementById("foodPopup").style.display = "flex";
+
+    const pref = window.studentData.foodPreference || "";
+    if (pref === "Veg only") {
+    document.getElementById("veg").checked = true;
+    ["ch","fi","eg","bf"].forEach(id => {
+      document.getElementById(id).checked = false;
+    });
+  } else {
+    const arr = pref.split(",");
+    document.getElementById("ch").checked = arr[0]?.trim() === "Chicken";
+    document.getElementById("fi").checked = arr[1]?.trim() === "Fish";
+    document.getElementById("eg").checked = arr[2]?.trim() === "Egg";
+    document.getElementById("bf").checked = arr[3]?.trim() === "Beef";
+  }
+
+}
+
+
+function closeFoodPopup() {
+
+  const pref = window.studentData?.foodPreference || "";
+
+  // If no preference saved → block closing
+  if (!pref || pref.trim() === "") {
+    document.getElementById("foodError").innerText =
+      "Please select atleast one preference";
+    return;
+  }
+
+  document.getElementById("foodPopup").style.display = "none";
+}
+
+
+function submitFood() {
+
+  let value;
+
+  if (document.getElementById("veg").checked) {
+    value = "Veg only";
+  } else {
+    value =
+      (document.getElementById("ch").checked ? "Chicken" : "-") + ", " +
+      (document.getElementById("fi").checked ? "Fish" : "-") + ", " +
+      (document.getElementById("eg").checked ? "Egg" : "-") + ", " +
+      (document.getElementById("bf").checked ? "Beef" : "-");
+  }
+
+  // Validation
+    const error = document.getElementById("foodError");
+
+    // Clear previous error
+    error.innerText = "";
+
+    if (!value || value === "-, -, -, -") {
+      error.innerText = "Please select atleast one preference";
+      return;
+    }
+
+  const accNo = document.getElementById("accNo").value;
+
+  google.script.run
+    .withSuccessHandler(function() {
+
+      // update local state
+      window.studentData.foodPreference = value;
+      updateFoodSummary(value);
+
+      document.getElementById("foodError").innerText = "";
+      closeFoodPopup();
+      document.getElementById("dashboard").style.display = "block";
+
+    })
+    .updateFood(accNo, value);
+}
+
+// Veg only logic
+function initFoodToggleLogic() {
+
+  const veg = document.getElementById("veg");
+  if (!veg) return;
+
+  veg.addEventListener("change", function() {
+    if (this.checked) {
+      ["ch","fi","eg","bf"].forEach(id => {
+        document.getElementById(id).checked = false;
+      });
+    }
+  });
+
+  ["ch","fi","eg","bf"].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    el.addEventListener("change", function() {
+      if (this.checked) {
+        document.getElementById("veg").checked = false;
+      }
+    });
+  });
+
+}
+
+
+  function updateFoodSummary(pref) {
+
+    if (!pref || pref.trim() === "") {
+      document.getElementById("foodSummary").innerText = "";
+      return;
+    }
+
+    if (pref === "Veg only") {
+      document.getElementById("foodSummary").innerText = "Preference: Veg only 🥦";
+      return;
+    }
+
+    const items = pref.split(",")
+      .map(x => x.trim())
+      .filter(x => x !== "-");
+
+    document.getElementById("foodSummary").innerText =
+      "Preference: " + items.join(", ");
+  }
+
+</script>
+
+</body>
+</html>
