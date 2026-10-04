@@ -345,7 +345,7 @@
     </div>
 
     <h2 class="page-title">
-      Digi Mess Book
+     Digi Mess Book
     </h2>
     <hr class="login-divider">
 
@@ -399,7 +399,7 @@
 
   <h4 class="text-secondary" style="margin-top:-10px;">Welcome</h4>
 
-  <h2>Digi Mess Book Lite</h2>
+  <h2>Test Digi Mess Book Lite</h2>
 
   <p id="studentName"></p>
 
@@ -617,9 +617,49 @@
 
 
 <script>
-
+// Back-end connecting API end point
+// LIVE SITE API URL
 const API_URL = "https://script.google.com/macros/s/AKfycbzVhm_QYJhBL2XczyH7Nm1EyjDlOxJbAOmJxeLwoI0arn1kqrPcSgeJJrswAudWPrqt/exec";
 
+function updateAllMessCutDots() {
+
+  const dateEntries = window.dateEntries;
+  const days = window.studentData.days;
+
+  dateEntries.forEach((entry, index) => {
+
+    const value = days[entry.raw];
+    let dotColor = "green";
+
+    if (value === "----") {
+
+      const previousIsCut =
+        index > 0 &&
+        days[dateEntries[index - 1].raw] === "----";
+
+      const nextIsCut =
+        index < dateEntries.length - 1 &&
+        days[dateEntries[index + 1].raw] === "----";
+
+      if (previousIsCut || nextIsCut) {
+        dotColor = "red";
+      } else {
+        dotColor = "yellow";
+      }
+    }
+
+    const cell = document.querySelector(
+      `[data-date-key="${entry.raw}"]`
+    );
+
+    if (cell) {
+      const dot = cell.children[1];
+      dot.style.background = dotColor;
+    }
+
+  });
+}
+  
 // 🔵 Login Screen 🔵 
 
 function login() {
@@ -735,7 +775,7 @@ function login() {
     });
 
     // Convert keys to Date objects
-    const dateEntries = Object.keys(data.days).map(key => {
+    window.dateEntries = Object.keys(data.days).map(key => {
       return {
         raw: key,
         dateObj: new Date(key)
@@ -743,7 +783,7 @@ function login() {
     });
 
     // Sort dates
-    dateEntries.sort((a, b) => a.dateObj - b.dateObj);
+    window.dateEntries.sort((a, b) => a.dateObj - b.dateObj);
 
     // First date
     const firstDate = dateEntries[0].dateObj;
@@ -763,10 +803,12 @@ function login() {
 
       const cell = document.createElement("div");
 
+      cell.setAttribute("data-date-key", entry.raw);
+
       // 🔒 Deadline
       const deadline = new Date(dateObj);
       deadline.setDate(deadline.getDate()-1);
-      deadline.setHours(19, 0, 0, 0);
+      deadline.setHours(19, 00, 0, 0);
 
       const now = new Date();
       const isLocked = now > deadline;
@@ -799,7 +841,7 @@ function login() {
       const dateNum = dateObj.getDate();
 
       // Dot color
-      let dotColor = (value === "----") ? "red" : "green";
+      let dotColor = "green";
 
       cell.innerHTML = `
         <div style="font-size:14px;font-weight:600;">${dateNum}</div>
@@ -830,7 +872,7 @@ function login() {
         // Create deadline
         const deadline = new Date(dateObj);
         deadline.setDate(deadline.getDate()-1);
-        deadline.setHours(19, 0, 0, 0);
+        deadline.setHours(19, 00, 0, 0);
 
         const options = {
           day: '2-digit',
@@ -909,6 +951,9 @@ function login() {
       calendar.appendChild(cell);
 
     });
+
+    updateAllMessCutDots();
+    
 
   })
   .catch(function(err) {
@@ -996,10 +1041,8 @@ statusMsg.innerText = "Updating...";
       document.getElementById("totalDaysText").innerText =
         "Billable Days: " + totalDays;
   
-      // Update dot
-      let dotColor = (newValue === "----") ? "red" : "green";
-      const dot = window.selectedCell.children[1];
-      dot.style.background = dotColor;
+      // Recalculate all mess-cut dot colors
+      updateAllMessCutDots();
   
       // ✅ Success message
       statusMsg.style.color = "green";
