@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>DigiMessBook</title>
+  <title>T-DigiMessBook</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -374,6 +374,19 @@
     </button>
 
     <div
+      onclick="openSupportPopup()"
+      style="
+        margin-top:12px;
+        font-size:14px;
+        color:#4CAF50;
+        cursor:pointer;
+        text-decoration:underline;
+      "
+    >
+      Get Technical Support
+    </div>
+
+    <div
       class="footer"
       style="border-top:1px solid #EEE; padding-top:18px;">
       Powered by
@@ -399,11 +412,11 @@
 
   <h4 class="text-secondary" style="margin-top:-10px;">Welcome</h4>
 
-  <h2>Test Digi Mess Book Lite</h2>
+  <h2>Digi Mess Book Lite</h2>
 
   <p id="studentName"></p>
 
-  <h3>Sep - Oct 2026</h3>
+  <h3>Oct 2026</h3>
 
   <p id="totalDaysText"></p>
 
@@ -614,13 +627,138 @@
   </div>
 </div>
 
+<!-- 🔵 Technical Support Popup 🔵 -->
+
+<div id="supportPopup" style="
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.5);
+  justify-content:center;
+  align-items:center;
+">
+
+  <div class="card"
+    style="
+      width:90%;
+      max-width:360px;
+      text-align:center;
+    ">
+
+    <h3>Technical Support</h3>
+
+    <!-- Tabs -->
+    <div style="
+      display:flex;
+      border-bottom:1px solid #ddd;
+      margin-bottom:20px;
+    ">
+
+      <button
+        id="forgotTab"
+        onclick="showSupportTab('forgot')"
+        style="
+          flex:1;
+          background:#4CAF50;
+          color:white;
+          border-radius:8px 8px 0 0;
+        ">
+        Forgot Password
+      </button>
+
+      <button
+        id="resetTab"
+        onclick="showSupportTab('reset')"
+        style="
+          flex:1;
+          background:#eee;
+          color:#333;
+          border-radius:8px 8px 0 0;
+        ">
+        Reset Password
+      </button>
+
+      <button
+        id="otherTab"
+        onclick="showSupportTab('other')"
+        style="
+          flex:1;
+          background:#eee;
+          color:#333;
+          border-radius:8px 8px 0 0;
+        ">
+        Other
+      </button>
+
+    </div>
+
+
+    <!-- Forgot Password Tab -->
+    <div id="forgotTabContent">
+
+      <p style="
+        font-size:14px;
+        color:#666;
+        margin-bottom:10px;
+      ">
+        Enter your account number to receive your password.
+      </p>
+
+      <input
+        type="text"
+        id="forgotAccNo"
+        placeholder="Account Number">
+
+      <button
+        class="btn-primary"
+        onclick="getForgotPassword()">
+        Get Password
+      </button>
+
+      <div id="forgotStatusMsg" style="
+        margin-top:12px;
+        font-size:13px;
+        min-height:18px;
+      "></div>
+
+    </div>
+
+
+    <!-- Reset Password Tab -->
+    <div id="resetTabContent" style="display:none;">
+      <p style="font-size:14px;color:#777;">
+        Reset password support will be available soon.
+      </p>
+    </div>
+
+
+    <!-- Other Tab -->
+    <div id="otherTabContent" style="display:none;">
+      <p style="font-size:14px;color:#777;">
+        Other technical support options will be available soon.
+      </p>
+    </div>
+
+
+    <button
+      class="btn-secondary"
+      onclick="closeSupportPopup()">
+      Close
+    </button>
+
+  </div>
+</div>
 
 
 <script>
 // Back-end connecting API end point
 // LIVE SITE API URL
-const API_URL = "https://script.google.com/macros/s/AKfycbzVhm_QYJhBL2XczyH7Nm1EyjDlOxJbAOmJxeLwoI0arn1kqrPcSgeJJrswAudWPrqt/exec";
-
+// const API_URL = "https://script.google.com/macros/s/AKfycbzVhm_QYJhBL2XczyH7Nm1EyjDlOxJbAOmJxeLwoI0arn1kqrPcSgeJJrswAudWPrqt/exec";   // code.gs file  in abhinandpk.gpt@gmail.com
+const API_URL = "https://script.google.com/macros/s/AKfycbwQzgYIUdquRfSrjScqCpgr-ccVm4qbsaK2wp3EwDrBC-Uw2pO4Qdm9gSf17vtm2rt6/exec";      // code.gs file  in digimessbook@gmail.com
+  
 function updateAllMessCutDots() {
 
   const dateEntries = window.dateEntries;
@@ -1272,6 +1410,161 @@ function initFoodToggleLogic() {
     document.getElementById("foodSummary").innerText =
       "Preference: " + items.join(", ");
   }
+
+  
+  // 🔵 Technical Support Popup
+
+function openSupportPopup() {
+  document.getElementById("supportPopup").style.display = "flex";
+
+  // Always open on Forgot Password tab
+  showSupportTab("forgot");
+}
+
+function closeSupportPopup() {
+  document.getElementById("supportPopup").style.display = "none";
+}
+
+function showSupportTab(tab) {
+
+  // Hide all tab contents
+  document.getElementById("forgotTabContent").style.display = "none";
+  document.getElementById("resetTabContent").style.display = "none";
+  document.getElementById("otherTabContent").style.display = "none";
+
+  // Reset tab button appearance
+  document.getElementById("forgotTab").style.background = "#eee";
+  document.getElementById("forgotTab").style.color = "#333";
+
+  document.getElementById("resetTab").style.background = "#eee";
+  document.getElementById("resetTab").style.color = "#333";
+
+  document.getElementById("otherTab").style.background = "#eee";
+  document.getElementById("otherTab").style.color = "#333";
+
+  // Show selected tab
+  document.getElementById(tab + "TabContent").style.display = "block";
+
+  // Highlight selected tab
+  const activeTab = document.getElementById(tab + "Tab");
+
+  activeTab.style.background = "#4CAF50";
+  activeTab.style.color = "white";
+}
+
+// 🔑 Forgot Password
+
+function getForgotPassword() {
+
+  const accNo = document.getElementById("forgotAccNo").value.trim();
+  const statusMsg = document.getElementById("forgotStatusMsg");
+  const btn = document.querySelector("#forgotTabContent button");
+
+  statusMsg.innerText = "";
+  statusMsg.style.color = "#555";
+
+  if (!accNo) {
+    statusMsg.style.color = "red";
+    statusMsg.innerText = "Please enter your account number.";
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerText = "Checking...";
+
+  fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "forgotPassword",
+      data: {
+        accNo: accNo
+      }
+    })
+  })
+  .then(response => response.json())
+  .then(result => {
+
+    console.log("Forgot password API response:", result);
+
+    if (result.status !== "success") {
+      throw new Error(result.message || "Backend error");
+    }
+
+    const response = result.data;
+
+    // Account doesn't exist
+    if (response.status === "invalid_id") {
+
+      statusMsg.style.color = "red";
+      statusMsg.innerText = "Account not found.";
+
+    }
+
+    // Account exists but no email
+    else if (response.status === "no_email") {
+
+      statusMsg.style.color = "red";
+      statusMsg.innerText =
+        "No email found. Please fill the Support GForm for the moment.";
+
+    }
+
+    // Account exists + email exists, but password not set
+    else if (response.status === "no_password") {
+
+      statusMsg.style.color = "red";
+      statusMsg.innerText =
+        "No password set !!! Contact tech team via GForm.";
+
+    }
+
+    // Password successfully sent
+    else if (response.status === "sent") {
+
+      const email = response.email;
+
+      // Mask email
+      const parts = email.split("@");
+      const username = parts[0];
+      const domain = parts[1];
+
+      let maskedUsername;
+
+      if (username.length <= 2) {
+        maskedUsername = username + "***";
+      } else {
+        maskedUsername =
+          username.substring(0, 2) +
+          "***" +
+          username.substring(username.length - 2);
+      }
+
+      const emailHint = maskedUsername + "@" + domain;
+
+      statusMsg.style.color = "green";
+      statusMsg.innerText =
+        "Your password has been sent to your email ID given: " +
+        emailHint;
+
+    }
+
+  })
+  
+  .catch(error => {
+    console.error("Forgot password API error:", error);
+  
+    statusMsg.style.color = "red";
+    statusMsg.innerText =
+      "Debug: " + (error.message || String(error));
+  })
+
+  .finally(() => {
+
+    btn.disabled = false;
+    btn.innerText = "Get Password";
+
+  });
+}
 
 </script>
 
