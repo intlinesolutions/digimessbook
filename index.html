@@ -1,265 +1,1571 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance in Progress</title>
+  <title>DigiMessBook</title>
 
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-body {
-    font-family: 'Segoe UI', sans-serif;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #f4f8f5;
-    color: #24372b;
-    overflow: hidden;
-    padding: 20px;
-}
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍽️</text></svg>">
 
-.container {
-    width: 100%;
-    max-width: 520px;
-    text-align: center;
-    animation: fadeUp 1s ease forwards;
-}
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100dvh;
+      margin: 0;
+      padding: 16px;
+      box-sizing: border-box;
+      overflow-x: hidden;
+    }
 
-.logo {
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    color: #27834b;
-    margin-bottom: 40px;
-}
+    * {
+      box-sizing: border-box;
+    }
 
-.illustration {
-    position: relative;
-    width: 190px;
-    height: 170px;
-    margin: 0 auto 25px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+    .container{
+      width:100%;
+      max-width:500px;
+      margin:auto;
+      text-align:center;
+    }
 
-.illustration .main-icon {
-    font-size: 105px;
-    animation: float 3s ease-in-out infinite;
-}
+    h2 {
+      margin-bottom: 20px;
+      font-size: clamp(24px, 5vw, 30px);
+    }
 
-.gear {
-    position: absolute;
-    font-size: 42px;
-    animation: rotate 8s linear infinite;
-}
+    input{
+      width:100%;
+      padding:14px 16px;
+      margin-top:14px;
+      border:1px solid #D1D5DB;
+      border-radius:12px;
+      background:#F9FAFB;
+      font-size:16px;
+      outline:none;
+      transition:.2s;
+    }
 
-.gear.one {
-    right: 5px;
-    top: 10px;
-}
+    input:focus{
+      border-color:#4CAF50;
+      background:#fff;
+      box-shadow:0 0 0 3px rgba(76,175,80,.15);
+    }
 
-.gear.two {
-    left: 0;
-    bottom: 5px;
-    font-size: 30px;
-    animation-direction: reverse;
-}
+    button{
+      width:100%;
+      padding:14px;
+      margin-top:10px;
+      border:none;
+      border-radius:12px;
+      cursor:pointer;
+      font-size:16px;
+      font-weight:600;
+      transition:all .2s ease;
+    }
 
-.sparkle {
-    position: absolute;
-    color: #e5ad35;
-    font-size: 20px;
-    animation: twinkle 1.8s ease-in-out infinite;
-}
+    button:disabled {
+      background-color: #9E9E9E;
+      cursor: not-allowed;
+    }
 
-.sparkle.one {
-    top: 5px;
-    left: 35px;
-}
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-top: 10px;
+      min-height: 18px;
+    }
 
-.sparkle.two {
-    right: 15px;
-    bottom: 20px;
-    animation-delay: .8s;
-}
+    #foodBtn{
+      width:auto;
+      padding:10px 18px;
+      font-size:14px;
+    }
 
-h1 {
-    font-size: clamp(28px, 6vw, 38px);
-    margin-bottom: 15px;
-    font-weight: 750;
-    color: #203b2b;
-}
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 20px;
+      margin-left: 10px;
+    }
 
-.description {
-    font-size: 15px;
-    line-height: 1.8;
-    color: #718076;
-    max-width: 420px;
-    margin: 0 auto 30px;
-}
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
 
-.status {
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-    padding: 9px 16px;
-    background: #e4f3e8;
-    color: #27834b;
-    border-radius: 30px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: .8px;
-    margin-bottom: 25px;
-}
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.3s;
+      border-radius: 20px;
+    }
 
-.status-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #31a85b;
-    animation: pulse 1.5s infinite;
-}
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.3s;
+      border-radius: 50%;
+    }
 
-.progress-area {
-    max-width: 350px;
-    margin: 0 auto 25px;
-}
+    input:checked + .slider {
+      background-color: #4CAF50;
+    }
 
-.progress-text {
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+  .option-row {
     display: flex;
     justify-content: space-between;
-    font-size: 12px;
-    color: #87938a;
-    margin-bottom: 9px;
-}
+    align-items: center;
+    width: 220px;
+    margin: 8px auto;
+  }
 
-.progress-bar {
-    width: 100%;
-    height: 6px;
-    background: #dfe9e1;
-    border-radius: 20px;
-    overflow: hidden;
-}
+  .option-label {
+    font-size: 14px;
+  }
 
-.progress-fill {
-    width: 65%;
-    height: 100%;
-    background: linear-gradient(90deg, #258b4b, #70c88b);
-    border-radius: 20px;
-    animation: progressGlow 2s ease-in-out infinite alternate;
-}
+  #calendarGrid{
+    display:grid;
+    grid-template-columns:repeat(7,minmax(0,1fr));
+    gap:6px;
+    margin-top:15px;
+    width:100%;
+  }
 
-.note {
-    font-size: 13px;
-    color: #89958c;
-    margin-top: 35px;
-}
+  h2 {
+    margin-bottom: 20px;
+    font-size: clamp(24px, 5vw, 30px);
+  }
 
-.footer {
-    font-size: 11px;
-    color: #a1aaa3;
-    margin-top: 45px;
-}
+  h3{
+      font-size:clamp(18px,4vw,22px);
+  }
 
-/* Animations */
+  h4{
+      font-size:clamp(15px,3vw,17px);
+  }
 
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-13px); }
-}
+  /* ---------- Utility Classes ---------- */
 
-@keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
+    .mt-5   { margin-top:5px; }
+    .mt-10  { margin-top:10px; }
+    .mt-15  { margin-top:15px; }
+    .mt-20  { margin-top:20px; }
 
-@keyframes twinkle {
-    0%, 100% { opacity: .3; transform: scale(.7); }
-    50% { opacity: 1; transform: scale(1.3); }
-}
+    .text-center{
+        text-align:center;
+    }
 
-@keyframes pulse {
-    0% { box-shadow: 0 0 0 0 #31a85b55; }
-    70% { box-shadow: 0 0 0 8px #31a85b00; }
-    100% { box-shadow: 0 0 0 0 #31a85b00; }
-}
+    .text-small{
+        font-size:13px;
+    }
 
-@keyframes progressGlow {
-    from { opacity: .8; }
-    to { opacity: 1; }
-}
+    .text-normal{
+        font-size:14px;
+    }
 
-@keyframes fadeUp {
-    from { opacity: 0; transform: translateY(25px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+    .text-muted{
+        color:#555;
+    }
 
-@media(max-width: 480px) {
-    .logo { margin-bottom: 30px; }
-    .illustration { transform: scale(.9); margin-bottom: 15px; }
-    .description { font-size: 14px; }
-}
-</style>
+    .text-secondary{
+        color:#777;
+    }
+
+    .flex-row{
+        display:flex;
+        gap:10px;
+    }
+
+    .flex-1{
+        flex:1;
+    }
+
+
+  /* ======================================================
+    COMPONENT LIBRARY (MH App Design System v1)
+  ====================================================== */
+
+    /* ---------- Page ---------- */
+
+    .page{
+        width:100%;
+        max-width:420px;
+        margin:auto;
+    }
+
+    /* ---------- Cards ---------- */
+
+    .card{
+        background:#fff;
+        border-radius:20px;
+        padding:28px;
+        width:100%;
+        box-shadow:0 12px 30px rgba(0,0,0,.10);
+    }
+
+    /* ---------- Titles ---------- */
+
+    .page-title{
+      font-size:28px;
+      font-weight:700;
+      color:#1F2937;
+      margin:0;
+    }
+
+    .section-title{
+        font-size:20px;
+        font-weight:600;
+        color:#1F2937;
+        margin-bottom:12px;
+    }
+
+    .subtitle{
+        font-size:18px;
+        color:#6B7280;
+    }
+
+    /* ---------- Footer ---------- */
+
+    .footer{
+        margin-top:20px;
+        font-size:14px;
+        color:#6B7280;
+        line-height:1.6;
+    }
+
+    /* ---------- Button Variants ---------- */
+
+    .btn-primary{
+      background:#4CAF50;
+      color:#fff;
+      letter-spacing:.5px;
+      text-transform:uppercase;
+    }
+
+    .btn-primary:hover{
+        background:#43A047;
+    }
+
+    .btn-secondary{
+        background:#fff;
+        color:#4CAF50;
+        border:2px solid #4CAF50;
+    }
+
+    .btn-secondary:hover{
+        background:#4CAF50;
+        color:#fff;
+    }
+
+    .btn-action{
+        background:#1E3A8A;
+        color:#fff;
+    }
+
+    .btn-action:hover{
+        background:#183075;
+    }
+
+    .btn-danger{
+        background:#8B0000;
+        color:#fff;
+    }
+
+    .btn-danger:hover{
+        background:#6F0000;
+    }
+
+    .login-divider{
+        border:none;
+        border-top:1px solid #E5E7EB;
+        margin:22px 0;
+    }
+
+  @media (max-width:480px){
+
+      body{
+          padding:10px;
+      }
+
+      .container{
+          padding:8px;
+          max-width:100%;
+      }
+
+      #dashboard{
+          padding:10px;
+      }
+
+      #calendarGrid{
+          gap:4px;
+      }
+
+      .option-row{
+          width:100%;
+      }
+
+  }
+
+
+  </style>
 </head>
+
 
 <body>
 
+
+<!-- 🔵 Login Screen 🔵 -->
+
 <div class="container">
 
-    <div class="logo">DIGI MESS BOOK</div>
+  <div class="card">
 
-    <div class="illustration">
-        <span class="main-icon">🛠️</span>
-        <span class="gear one">⚙️</span>
-        <span class="gear two">⚙️</span>
-        <span class="sparkle one">✦</span>
-        <span class="sparkle two">✦</span>
+    <div style="font-size:54px; margin-bottom:12px;">
+      🍽️
     </div>
 
-    <div class="status">
-        <span class="status-dot"></span>
-        MAINTENANCE IN PROGRESS
+    <h2 class="page-title">
+     Digi Mess Book
+    </h2>
+    <hr class="login-divider">
+
+    <h4
+      class="subtitle"
+      style="margin:10px 0 22px;">
+      MH NSSCE
+    </h4>
+
+    <input type="text" id="accNo" placeholder="Account Number">
+
+    <input type="password" id="password" placeholder="Password">
+
+    <div
+      class="text-small text-secondary"
+      style="margin:16px 0 8px;">
+      Default password:<br>
+      College admission number (e.g. <strong>24B000</strong>)
     </div>
 
-    <h1>We're making things better!</h1>
+    <button
+      id="loginBtn"
+      class="btn-primary"
+      onclick="login()">
+      Login
+    </button>
 
-    <p class="description">
-        We're currently performing some scheduled maintenance
-        to improve your experience. We'll be back shortly
-        with something better.
-    </p>
-
-    <div class="progress-area">
-        <div class="progress-text">
-            <span>Working on improvements</span>
-            <span>In progress</span>
-        </div>
-        <div class="progress-bar">
-            <div class="progress-fill"></div>
-        </div>
+    <div
+      onclick="openSupportPopup()"
+      style="
+        margin-top:12px;
+        font-size:14px;
+        color:#4CAF50;
+        cursor:pointer;
+        text-decoration:underline;
+      "
+    >
+      Get Technical Support
     </div>
 
-    <p class="note">
-        Thank you for your patience and understanding.
-    </p>
-
-    <div class="footer">
-        &copy; <span id="year"></span> IntLine Solutions. All rights reserved.
+    <div
+      class="footer"
+      style="border-top:1px solid #EEE; padding-top:18px;">
+      Powered by
+      <br><strong>IntLine Solutions</strong><br>
+      intlinesolutions@gmail.com
     </div>
+
+    <div id="errorMsg" class="error"></div>
+
+  </div>
 
 </div>
 
+
+<!-- 🔵 Home / Dashboard 🔵 -->
+
+  <div id="dashboard"
+    class="page text-center"
+    style="
+    display:none;
+    padding:16px;
+  ">
+
+  <h4 class="text-secondary" style="margin-top:-10px;">Welcome</h4>
+
+  <h2>Digi Mess Book Lite</h2>
+
+  <p id="studentName"></p>
+
+  <h3>November 2026</h3>
+
+  <p id="totalDaysText"></p>
+
+  <!-- 🔵 Calendar Section -->
+  <div id="calendar">
+    <div id="calendarGrid"></div>
+  </div>
+
+  <div style="margin-top:15px;">
+    <button
+      id="foodBtn"
+      class="btn-secondary"
+      onclick="openFoodPopup()">
+      Food Preference
+    </button>
+    <p id="foodSummary" style="font-size:13px; margin-top:8px; color:#444;"></p>
+
+    <!-- 🔵 Footer Section -->
+    <div class="mt-15" style="font-size:15px;color:#7393B3;">
+      <br>This is a Limited, Free trial version<br>
+    </div>
+
+    <div class="mt-15 text-normal text-muted">
+      © IntLine Solutions , 2026<br>
+      intlinesolutions@gmail.com
+    </div>
+
+  </div>
+</div>
+
+
+<!-- 🔵 Day Popup 🔵 -->
+
+<div id="popup" style="
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.5);
+  justify-content:center;
+  align-items:center;
+">
+
+  <div class="card"
+    style="
+    width:90%;
+    max-width:360px;
+    text-align:center;
+  ">
+    <!-- 🔵 Day Popup Heading 🔵 -->
+    <h3 id="popupDate"></h3>
+    <p id="lockMsg" style="font-size:13px; margin-bottom:10px;"></p>
+
+    <div>
+
+      <!-- 🔵 Day Popup - Options 🔵 -->
+      <label class="option-row" style="cursor:pointer;">
+        <div class="option-label">Breakfast ☕</div>
+        <span class="switch">
+          <input type="checkbox" id="b">
+          <span class="slider"></span>
+        </span>
+      </label>
+
+      <label class="option-row" style="cursor:pointer;">
+        <div class="option-label">Lunch 🍛</div>
+        <span class="switch">
+          <input type="checkbox" id="l">
+          <span class="slider"></span>
+        </span>
+      </label>
+
+      <label class="option-row" style="cursor:pointer;">
+        <div class="option-label">Tea 🍵</div>
+        <span class="switch">
+          <input type="checkbox" id="t">
+          <span class="slider"></span>
+        </span>
+      </label>
+
+      <label class="option-row" style="cursor:pointer;">
+        <div class="option-label">Dinner 🍽️</div>
+        <span class="switch">
+          <input type="checkbox" id="d">
+          <span class="slider"></span>
+        </span>
+      </label>
+
+    </div>
+
+    <br>
+
+    <!-- 🔵 Day Popup - Quick Action Buttons 🔵 -->
+    <div style="display:flex; justify-content:space-between; gap:10px; margin-bottom:10px;">
+      <button
+        id="fullDayBtn"
+        class="btn-action"
+        onclick="setFullDay()"
+        style="flex:1;">
+        Full Day
+      </button>
+
+      <button
+        id="messCutBtn"
+        class="btn-danger"
+        onclick="setMessCut()"
+        style="flex:1;">
+        Mess Cut
+      </button>
+    </div>
+
+    <!-- 🔵 Day Popup - Submit / Cancel Buttons 🔵 -->
+    <button
+      id="submitBtn"
+      class="btn-primary"
+      onclick="submitDay()">
+      Submit
+    </button>
+    
+    <button
+      class="btn-secondary"
+      onclick="closePopup()">
+      Cancel
+    </button>
+
+    <!-- ✅ Status Message -->
+    <div id="dayStatusMsg" style="
+      margin-top:12px;
+      font-size:13px;
+      min-height:16px;
+    "></div>
+  </div>
+</div>
+
+
+<!-- 🔵 Food Options Popup 🔵 -->
+
+<div id="foodPopup" style="
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.5);
+  justify-content:center;
+  align-items:center;
+">
+
+    <div class="card"
+      style="
+      width:90%;
+      max-width:360px;
+      text-align:center;
+    ">
+    <h3>Food Preference</h3>
+
+    <div>
+
+      <label class="option-row" style="cursor:pointer;">
+        <div class="option-label">Chicken 🍗</div>
+        <span class="switch">
+          <input type="checkbox" id="ch">
+          <span class="slider"></span>
+        </span>
+      </label>
+
+      <label class="option-row" style="cursor:pointer;">
+        <div class="option-label">Fish 🐟</div>
+        <span class="switch">
+          <input type="checkbox" id="fi">
+          <span class="slider"></span>
+        </span>
+      </label>
+
+      <label class="option-row" style="cursor:pointer;">
+        <div class="option-label">Egg 🥚</div>
+        <span class="switch">
+          <input type="checkbox" id="eg">
+          <span class="slider"></span>
+        </span>
+      </label>
+
+      <label class="option-row" style="cursor:pointer;">
+        <div class="option-label">Beef 🍖</div>
+        <span class="switch">
+          <input type="checkbox" id="bf">
+          <span class="slider"></span>
+        </span>
+      </label>
+
+      <label class="option-row" style="cursor:pointer;">
+        <div class="option-label">Veg only 🥦</div>
+        <span class="switch">
+          <input type="checkbox" id="veg">
+          <span class="slider"></span>
+        </span>
+      </label>
+
+    </div>
+
+    <br>
+    <p id="foodError" style="color:red; font-size:12px; min-height:5px;"></p>
+    <button onclick="submitFood()">Save</button>
+    <button onclick="closeFoodPopup()">Cancel</button>
+  </div>
+</div>
+
+<!-- 🔵 Technical Support Popup 🔵 -->
+
+<div id="supportPopup" style="
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.5);
+  justify-content:center;
+  align-items:center;
+">
+
+  <div class="card"
+    style="
+      width:90%;
+      max-width:360px;
+      text-align:center;
+    ">
+
+    <h3>Technical Support</h3>
+
+    <!-- Tabs -->
+    <div style="
+      display:flex;
+      border-bottom:1px solid #ddd;
+      margin-bottom:20px;
+    ">
+
+      <button
+        id="forgotTab"
+        onclick="showSupportTab('forgot')"
+        style="
+          flex:1;
+          background:#4CAF50;
+          color:white;
+          border-radius:8px 8px 0 0;
+        ">
+        Forgot Password
+      </button>
+
+      <button
+        id="resetTab"
+        onclick="showSupportTab('reset')"
+        style="
+          flex:1;
+          background:#eee;
+          color:#333;
+          border-radius:8px 8px 0 0;
+        ">
+        Reset Password
+      </button>
+
+      <button
+        id="otherTab"
+        onclick="showSupportTab('other')"
+        style="
+          flex:1;
+          background:#eee;
+          color:#333;
+          border-radius:8px 8px 0 0;
+        ">
+        Other
+      </button>
+
+    </div>
+
+
+    <!-- Forgot Password Tab -->
+    <div id="forgotTabContent">
+
+      <p style="
+        font-size:14px;
+        color:#666;
+        margin-bottom:10px;
+      ">
+        Enter your account number to receive your password.
+      </p>
+
+      <input
+        type="text"
+        id="forgotAccNo"
+        placeholder="Account Number">
+
+      <button
+        class="btn-primary"
+        onclick="getForgotPassword()">
+        Get Password
+      </button>
+
+      <div id="forgotStatusMsg" style="
+        margin-top:12px;
+        font-size:13px;
+        min-height:18px;
+      "></div>
+
+    </div>
+
+
+    <!-- Reset Password Tab -->
+    <div id="resetTabContent" style="display:none;">
+      <p style="font-size:14px;color:#777;">
+        Reset password support will be available soon.
+      </p>
+    </div>
+
+
+    <!-- Other Tab -->
+    <div id="otherTabContent" style="display:none;">
+      <p style="font-size:14px;color:#777;">
+        Other technical support options will be available soon.
+      </p>
+    </div>
+
+
+    <button
+      class="btn-secondary"
+      onclick="closeSupportPopup()">
+      Close
+    </button>
+
+  </div>
+</div>
+
+
 <script>
-document.getElementById("year").textContent =
-    new Date().getFullYear();
+// Back-end connecting API end point
+// LIVE SITE API URL
+// const API_URL = "https://script.google.com/macros/s/AKfycbzVhm_QYJhBL2XczyH7Nm1EyjDlOxJbAOmJxeLwoI0arn1kqrPcSgeJJrswAudWPrqt/exec";   // code.gs file  in abhinandpk.gpt@gmail.com
+const API_URL = "https://script.google.com/macros/s/AKfycbwQzgYIUdquRfSrjScqCpgr-ccVm4qbsaK2wp3EwDrBC-Uw2pO4Qdm9gSf17vtm2rt6/exec";      // code.gs file  in digimessbook@gmail.com
+  
+function updateAllMessCutDots() {
+
+  const dateEntries = window.dateEntries;
+  const days = window.studentData.days;
+
+  dateEntries.forEach((entry, index) => {
+
+    const value = days[entry.raw];
+    let dotColor = "green";
+
+    if (value === "----") {
+
+      const previousIsCut =
+        index > 0 &&
+        days[dateEntries[index - 1].raw] === "----";
+
+      const nextIsCut =
+        index < dateEntries.length - 1 &&
+        days[dateEntries[index + 1].raw] === "----";
+
+      if (previousIsCut || nextIsCut) {
+        dotColor = "red";
+      } else {
+        dotColor = "yellow";
+      }
+    }
+
+    const cell = document.querySelector(
+      `[data-date-key="${entry.raw}"]`
+    );
+
+    if (cell) {
+      const dot = cell.children[1];
+      dot.style.background = dotColor;
+    }
+
+  });
+}
+  
+// 🔵 Login Screen 🔵 
+
+function login() {
+
+  const accNo = document.getElementById("accNo").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const btn = document.getElementById("loginBtn");
+  const error = document.getElementById("errorMsg");
+
+  // Clear previous error
+  error.innerText = "";
+  error.style.color = "red";
+
+  // Validation
+  if (!accNo || !password) {
+    error.innerText = "Please enter all fields";
+    return;
+  }
+
+  // 🔄 Loading state
+  btn.disabled = true;
+  btn.innerText = "Checking...";
+
+  // 🚀 ONE API request for login + student data
+  fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "login",
+      data: {
+        accNo: accNo,
+        password: password
+      }
+    })
+  })
+  .then(response => response.json())
+  .then(result => {
+
+    console.log("Login API response:", result);
+
+    const response = result.data;
+    
+    if (response.status === "invalid_id") {
+      error.innerText = "Account not found";
+      return;
+    
+    } else if (response.status === "wrong_password") {
+      error.innerText = "Incorrect password";
+      return;
+    
+    } else if (response.status !== "success") {
+      error.innerText = "Unable to login. Please try again.";
+      return;
+    }
+
+    const data = response.studentData;
+
+    if (!data) {
+      throw new Error("Student data not found");
+    }
+
+    // Store globally
+    window.studentData = data;
+
+    // Food summary
+    updateFoodSummary(data.foodPreference);
+
+    // Food Popup Auto open if empty
+    setTimeout(() => {
+      if (!data.foodPreference || data.foodPreference.trim() === "") {
+        openFoodPopup();
+      }
+    }, 300);
+
+    // Login successful
+    error.style.color = "green";
+    error.innerText = "Login successful";
+
+    // Hide login
+    document.querySelector(".container").style.display = "none";
+
+    // Show dashboard
+    document.getElementById("dashboard").style.display = "block";
+
+    // Student details
+    document.getElementById("studentName").innerHTML =
+      "<div style='line-height:1.8;'>" +
+        "Name : " + data.name + "<br>" +
+        "Acc No : " + data.id + "<br>" +
+        "Hostel : " + data.hostel + "<br>" +
+        "Room : " + data.room +
+      "</div>";
+
+    // Billable days
+    window.studentData.totalDays = data.totalDays;
+
+    document.getElementById("totalDaysText").innerText =
+      "Billable Days: " + data.totalDays;
+
+    console.log(data);
+
+    // Calendar
+    const calendar = document.getElementById("calendarGrid");
+    calendar.innerHTML = "";
+
+    // Week headers
+    const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+    weekDays.forEach(day => {
+      const el = document.createElement("div");
+      el.innerText = day;
+      el.style.fontWeight = "bold";
+      calendar.appendChild(el);
+    });
+
+    // Convert keys to Date objects
+    window.dateEntries = Object.keys(data.days).map(key => {
+      return {
+        raw: key,
+        dateObj: new Date(key)
+      };
+    });
+
+    // Sort dates
+    window.dateEntries.sort((a, b) => a.dateObj - b.dateObj);
+
+    // First date
+    const firstDate = dateEntries[0].dateObj;
+    const startDay = firstDate.getDay();
+
+    // Empty cells before first date
+    for (let i = 0; i < startDay; i++) {
+      const empty = document.createElement("div");
+      calendar.appendChild(empty);
+    }
+
+    // Create calendar
+    dateEntries.forEach(entry => {
+
+      const dateObj = entry.dateObj;
+      const value = window.studentData.days[entry.raw];
+
+      const cell = document.createElement("div");
+
+      cell.setAttribute("data-date-key", entry.raw);
+
+      // 🔒 Deadline
+      const deadline = new Date(dateObj);
+      deadline.setDate(deadline.getDate()-1);
+      deadline.setHours(19, 00, 0, 0);
+
+      const now = new Date();
+      const isLocked = now > deadline;
+
+      if (isLocked) {
+        cell.style.backgroundColor = "#e0e0e0";
+        cell.style.cursor = "not-allowed";
+      }
+
+      // Today
+      const today = new Date();
+
+      if (
+        dateObj.getDate() === today.getDate() &&
+        dateObj.getMonth() === today.getMonth() &&
+        dateObj.getFullYear() === today.getFullYear()
+      ) {
+        cell.style.border = "2px solid blue";
+      }
+
+      cell.style.border = "1px solid #ccc";
+      cell.style.borderRadius = "8px";
+      cell.style.padding = "8px 4px";
+      cell.style.textAlign = "center";
+      cell.style.cursor = "pointer";
+      cell.style.position = "relative";
+      cell.style.minHeight = "58px";
+
+      // Date number
+      const dateNum = dateObj.getDate();
+
+      // Dot color
+      let dotColor = "green";
+
+      cell.innerHTML = `
+        <div style="font-size:14px;font-weight:600;">${dateNum}</div>
+        <div style="
+          width:8px;
+          height:8px;
+          border-radius:50%;
+          background:${dotColor};
+          margin:5px auto 0;
+        "></div>
+      `;
+
+      // Click event
+      cell.onclick = () => {
+
+        window.selectedDate = dateObj;
+        window.selectedKey = entry.raw;
+        window.selectedCell = cell;
+        window.isLocked = isLocked;
+
+        document.getElementById("popup").style.display = "flex";
+
+        document.getElementById("popupDate").innerText =
+          dateObj.toDateString();
+
+        const msg = document.getElementById("lockMsg");
+
+        // Create deadline
+        const deadline = new Date(dateObj);
+        deadline.setDate(deadline.getDate()-1);
+        deadline.setHours(19, 00, 0, 0);
+
+        const options = {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        };
+
+        const deadlineText =
+          deadline.toLocaleString('en-GB', options);
+
+        const formattedDeadline = deadlineText
+          .replace('AM', 'am')
+          .replace('PM', 'pm')
+          .replace(',', ' •');
+
+        if (isLocked) {
+          msg.innerText =
+            "Locked (Deadline: " + deadlineText + ")";
+          msg.style.color = "red";
+        } else {
+          msg.innerText =
+            "Editable until: " + formattedDeadline;
+          msg.style.color = "green";
+        }
+
+        // Latest value
+        const latestValue =
+          window.studentData.days[entry.raw];
+
+        document.getElementById("b").checked =
+          latestValue[0] === "B";
+
+        document.getElementById("l").checked =
+          latestValue[1] === "L";
+
+        document.getElementById("t").checked =
+          latestValue[2] === "T";
+
+        document.getElementById("d").checked =
+          latestValue[3] === "D";
+
+        const disabled = isLocked;
+
+        ["b","l","t","d","submitBtn","fullDayBtn","messCutBtn"]
+          .forEach(id => {
+
+            const el = document.getElementById(id);
+
+            if (el) {
+
+              el.disabled = disabled;
+
+              if (disabled) {
+                el.style.opacity = "0.6";
+                el.style.cursor = "not-allowed";
+              } else {
+                el.style.opacity = "1";
+                el.style.cursor = "pointer";
+              }
+            }
+          });
+
+        // Reset status
+        const statusMsg =
+          document.getElementById("dayStatusMsg");
+
+        if (statusMsg) {
+          statusMsg.innerText = "";
+        }
+
+      };
+
+      calendar.appendChild(cell);
+
+    });
+
+    updateAllMessCutDots();
+    
+
+  })
+  .catch(function(err) {
+
+    console.error("Login API error:", err);
+
+    error.style.color = "red";
+    error.innerText = "Server error. Try again.";
+
+  })
+  .finally(function() {
+
+    btn.disabled = false;
+    btn.innerText = "Login";
+
+  });
+
+}
+
+function closePopup() {
+  document.getElementById("popup").style.display = "none";
+}
+
+function submitDay() {
+
+  if (window.isLocked) {
+    alert("This day is locked");
+    return;
+  }
+
+  // Build code (BLTD format)
+  let code =
+    (document.getElementById("b").checked ? "B" : "-") +
+    (document.getElementById("l").checked ? "L" : "-") +
+    (document.getElementById("t").checked ? "T" : "-") +
+    (document.getElementById("d").checked ? "D" : "-");
+
+  const accNo = document.getElementById("accNo").value;
+
+  // Call backend
+  const statusMsg = document.getElementById("dayStatusMsg");
+
+// 🔄 Disable UI
+["b","l","t","d","submitBtn","fullDayBtn","messCutBtn"].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.disabled = true;
+});
+
+statusMsg.innerText = "";
+statusMsg.style.color = "#555";
+statusMsg.innerText = "Updating...";
+
+  fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "updateDay",
+      data: {
+        accNo: accNo,
+        dateKey: window.selectedKey,
+        value: code
+      }
+    })
+  })
+  .then(response => response.json())
+  .then(result => {
+  
+    console.log("Update day API response:", result);
+  
+    if (result.status !== "success") {
+      throw new Error(result.message || "Backend error");
+    }
+  
+    try {
+  
+      let newValue = code;
+  
+      // Update local data
+      window.studentData.days[window.selectedKey] = newValue;
+  
+      // 🔢 Use billable days (as per min 2-day mess cut rule) calculated by Apps Script
+      const totalDays = result.data.totalDays;
+      
+      window.studentData.totalDays = totalDays;
+      
+      document.getElementById("totalDaysText").innerText =
+        "Billable Days: " + totalDays;
+  
+      // Recalculate all mess-cut dot colors
+      updateAllMessCutDots();
+  
+      // ✅ Success message
+      statusMsg.style.color = "green";
+      statusMsg.innerText = "Successfully Updated";
+  
+      // ⏳ Close after 1 sec
+      setTimeout(() => {
+  
+        // 🔓 Re-enable UI
+        ["b","l","t","d","submitBtn","fullDayBtn","messCutBtn"].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.disabled = false;
+        });
+  
+        closePopup();
+  
+      }, 1000);
+  
+    } catch (e) {
+  
+      statusMsg.style.color = "red";
+      statusMsg.innerText = "Error... Pls try submitting again";
+  
+      ["b","l","t","d","submitBtn","fullDayBtn","messCutBtn"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.disabled = false;
+      });
+  
+    }
+  
+  })
+  .catch(function(error) {
+  
+    console.error("Update day API error:", error);
+  
+    statusMsg.style.color = "red";
+    statusMsg.innerText = "Error... Pls try submitting again";
+  
+    ["b","l","t","d","submitBtn","fullDayBtn","messCutBtn"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.disabled = false;
+    });
+  
+  });
+
+}
+
+function setFullDay() {
+
+  if (window.isLocked) {
+    alert("This day is locked");
+    return;
+  }
+
+  document.getElementById("b").checked = true;
+  document.getElementById("l").checked = true;
+  document.getElementById("t").checked = true;
+  document.getElementById("d").checked = true;
+
+  submitDay();
+}
+
+function setMessCut() {
+
+  if (window.isLocked) {
+    alert("This day is locked");
+    return;
+  }
+
+  document.getElementById("b").checked = false;
+  document.getElementById("l").checked = false;
+  document.getElementById("t").checked = false;
+  document.getElementById("d").checked = false;
+
+  submitDay();
+}
+
+
+window.onload = function () {
+  initFoodToggleLogic();
+};
+
+function openFoodPopup() {
+  document.getElementById("foodPopup").style.display = "flex";
+
+    const pref = window.studentData.foodPreference || "";
+    if (pref === "Veg only") {
+    document.getElementById("veg").checked = true;
+    ["ch","fi","eg","bf"].forEach(id => {
+      document.getElementById(id).checked = false;
+    });
+  } else {
+    const arr = pref.split(",");
+    document.getElementById("ch").checked = arr[0]?.trim() === "Chicken";
+    document.getElementById("fi").checked = arr[1]?.trim() === "Fish";
+    document.getElementById("eg").checked = arr[2]?.trim() === "Egg";
+    document.getElementById("bf").checked = arr[3]?.trim() === "Beef";
+  }
+
+}
+
+
+function closeFoodPopup() {
+
+  const pref = window.studentData?.foodPreference || "";
+
+  // If no preference saved → block closing
+  if (!pref || pref.trim() === "") {
+    document.getElementById("foodError").innerText =
+      "Please select atleast one preference";
+    return;
+  }
+
+  document.getElementById("foodPopup").style.display = "none";
+}
+
+
+function submitFood() {
+
+  let value;
+
+  if (document.getElementById("veg").checked) {
+    value = "Veg only";
+  } else {
+    value =
+      (document.getElementById("ch").checked ? "Chicken" : "-") + ", " +
+      (document.getElementById("fi").checked ? "Fish" : "-") + ", " +
+      (document.getElementById("eg").checked ? "Egg" : "-") + ", " +
+      (document.getElementById("bf").checked ? "Beef" : "-");
+  }
+
+  // Validation
+    const error = document.getElementById("foodError");
+
+    // Clear previous error
+    error.innerText = "";
+
+    if (!value || value === "-, -, -, -") {
+      error.innerText = "Please select atleast one preference";
+      return;
+    }
+
+  const accNo = document.getElementById("accNo").value;
+
+    fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          action: "updateFood",
+          data: {
+            accNo: accNo,
+            value: value
+          }
+        })
+      })
+      .then(response => response.json())
+      .then(result => {
+    
+        console.log("Update food API response:", result);
+    
+        if (result.status !== "success") {
+          throw new Error(result.message || "Unable to update food preference");
+        }
+    
+        // update local state
+        window.studentData.foodPreference = value;
+        updateFoodSummary(value);
+    
+        document.getElementById("foodError").innerText = "";
+        closeFoodPopup();
+        document.getElementById("dashboard").style.display = "block";
+    
+      })
+      .catch(error => {
+    
+        console.error("Update food API error:", error);
+    
+        document.getElementById("foodError").innerText =
+          "Error... Pls try saving again";
+    
+      });
+}
+
+// Veg only logic
+function initFoodToggleLogic() {
+
+  const veg = document.getElementById("veg");
+  if (!veg) return;
+
+  veg.addEventListener("change", function() {
+    if (this.checked) {
+      ["ch","fi","eg","bf"].forEach(id => {
+        document.getElementById(id).checked = false;
+      });
+    }
+  });
+
+  ["ch","fi","eg","bf"].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    el.addEventListener("change", function() {
+      if (this.checked) {
+        document.getElementById("veg").checked = false;
+      }
+    });
+  });
+
+}
+
+
+  function updateFoodSummary(pref) {
+
+    if (!pref || pref.trim() === "") {
+      document.getElementById("foodSummary").innerText = "";
+      return;
+    }
+
+    if (pref === "Veg only") {
+      document.getElementById("foodSummary").innerText = "Preference: Veg only 🥦";
+      return;
+    }
+
+    const items = pref.split(",")
+      .map(x => x.trim())
+      .filter(x => x !== "-");
+
+    document.getElementById("foodSummary").innerText =
+      "Preference: " + items.join(", ");
+  }
+
+  
+  // 🔵 Technical Support Popup
+
+function openSupportPopup() {
+  document.getElementById("supportPopup").style.display = "flex";
+
+  // Always open on Forgot Password tab
+  showSupportTab("forgot");
+}
+
+function closeSupportPopup() {
+  document.getElementById("supportPopup").style.display = "none";
+}
+
+function showSupportTab(tab) {
+
+  // Hide all tab contents
+  document.getElementById("forgotTabContent").style.display = "none";
+  document.getElementById("resetTabContent").style.display = "none";
+  document.getElementById("otherTabContent").style.display = "none";
+
+  // Reset tab button appearance
+  document.getElementById("forgotTab").style.background = "#eee";
+  document.getElementById("forgotTab").style.color = "#333";
+
+  document.getElementById("resetTab").style.background = "#eee";
+  document.getElementById("resetTab").style.color = "#333";
+
+  document.getElementById("otherTab").style.background = "#eee";
+  document.getElementById("otherTab").style.color = "#333";
+
+  // Show selected tab
+  document.getElementById(tab + "TabContent").style.display = "block";
+
+  // Highlight selected tab
+  const activeTab = document.getElementById(tab + "Tab");
+
+  activeTab.style.background = "#4CAF50";
+  activeTab.style.color = "white";
+}
+
+// 🔑 Forgot Password
+
+function getForgotPassword() {
+
+  const accNo = document.getElementById("forgotAccNo").value.trim();
+  const statusMsg = document.getElementById("forgotStatusMsg");
+  const btn = document.querySelector("#forgotTabContent button");
+
+  statusMsg.innerText = "";
+  statusMsg.style.color = "#555";
+
+  if (!accNo) {
+    statusMsg.style.color = "red";
+    statusMsg.innerText = "Please enter your account number.";
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerText = "Checking...";
+
+  fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "forgotPassword",
+      data: {
+        accNo: accNo
+      }
+    })
+  })
+  .then(response => response.json())
+  .then(result => {
+
+    console.log("Forgot password API response:", result);
+
+    if (result.status !== "success") {
+      throw new Error(result.message || "Backend error");
+    }
+
+    const response = result.data;
+
+    // Account doesn't exist
+    if (response.status === "invalid_id") {
+
+      statusMsg.style.color = "red";
+      statusMsg.innerText = "Account not found.";
+
+    }
+
+    // Account exists but no email
+    else if (response.status === "no_email") {
+
+      statusMsg.style.color = "red";
+      statusMsg.innerText =
+        "No email found. Please fill the Support GForm for the moment.";
+
+    }
+
+    // Account exists + email exists, but password not set
+    else if (response.status === "no_password") {
+
+      statusMsg.style.color = "red";
+      statusMsg.innerText =
+        "No password set !!! Contact tech team via GForm.";
+
+    }
+
+    // Password successfully sent
+    else if (response.status === "sent") {
+
+      const email = response.email;
+
+      // Mask email
+      const parts = email.split("@");
+      const username = parts[0];
+      const domain = parts[1];
+
+      let maskedUsername;
+
+      if (username.length <= 2) {
+        maskedUsername = username + "***";
+      } else {
+        maskedUsername =
+          username.substring(0, 2) +
+          "***" +
+          username.substring(username.length - 2);
+      }
+
+      const emailHint = maskedUsername + "@" + domain;
+
+      statusMsg.style.color = "green";
+      statusMsg.innerText =
+        "Your password has been sent to your email ID given: " +
+        emailHint;
+
+    }
+
+  })
+  
+  .catch(error => {
+    console.error("Forgot password API error:", error);
+  
+    statusMsg.style.color = "red";
+    statusMsg.innerText =
+      "Debug: " + (error.message || String(error));
+  })
+
+  .finally(() => {
+
+    btn.disabled = false;
+    btn.innerText = "Get Password";
+
+  });
+}
+
 </script>
 
 </body>
